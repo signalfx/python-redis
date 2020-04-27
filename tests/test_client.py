@@ -38,7 +38,7 @@ class TestClient(unittest.TestCase):
     def test_trace_client_error(self):
         with patch.object(self.client,
                           'execute_command',
-                          side_effect=ValueError) as exc_command:
+                          side_effect=ValueError('error msg')) as exc_command:
             exc_command.__name__ = 'execute_command'
 
             redis_opentracing.init_tracing(self.tracer,
@@ -56,19 +56,23 @@ class TestClient(unittest.TestCase):
             self.assertEqual(len(self.tracer.finished_spans()), 1)
             span = self.tracer.finished_spans()[0]
             self.assertEqual(span.operation_name, 'GET')
-            self.assertEqual(span.tags, {
+            tags = {
                 'component': 'redis-py',
                 'db.type': 'redis',
                 'db.statement': 'GET my.key',
                 'span.kind': 'client',
                 'error': True,
-            })
-            self.assertEqual(len(span.logs), 1)
-            self.assertEqual(span.logs[0].key_values.get('event', None),
-                             'error')
-            self.assertTrue(isinstance(
-                span.logs[0].key_values.get('error.object', None), ValueError
-            ))
+            }
+
+            for k, v in tags.items():
+                assert k in span.tags
+                assert span.tags[k] == v
+
+            self.assertEqual(span.tags['error'], True)
+            self.assertEqual(span.tags['sfx.error.message'], 'error msg')
+            self.assertEqual(span.tags['sfx.error.kind'], 'ValueError')
+            self.assertEqual(span.tags['sfx.error.object'], '<class \'ValueError\'>')
+            assert len(span.tags['sfx.error.stack']) > 50
 
     def test_trace_client_start_span_cb(self):
         def start_span_cb(span):
