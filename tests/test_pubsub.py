@@ -115,16 +115,20 @@ class TestPubSub(unittest.TestCase):
             self.assertEqual(len(self.tracer.finished_spans()), 1)
             span = self.tracer.finished_spans()[0]
             self.assertEqual(span.operation_name, 'SUB')
-            self.assertEqual(span.tags, {
+            tags = {
                 'component': 'redis-py',
                 'db.type': 'redis',
                 'db.statement': '',
                 'span.kind': 'client',
                 'error': True,
-            })
-            self.assertEqual(len(span.logs), 1)
-            self.assertEqual(span.logs[0].key_values.get('event', None),
-                             'error')
-            self.assertTrue(isinstance(
-                span.logs[0].key_values.get('error.object', None), ValueError
-            ))
+            }
+
+            for k, v in tags.items():
+                assert k in span.tags
+                assert span.tags[k] == v
+
+            self.assertEqual(span.tags['error'], True)
+            self.assertEqual(span.tags['sfx.error.message'], '')
+            self.assertEqual(span.tags['sfx.error.kind'], 'ValueError')
+            self.assertEqual(span.tags['sfx.error.object'], '<class \'ValueError\'>')
+            assert len(span.tags['sfx.error.stack']) > 50

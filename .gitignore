@@ -1,4 +1,6 @@
 *.pyc
+.pytest_cache/
+.cache/
 dist
 bin
 eggs
@@ -6,3 +8,6 @@ lib
 *.egg-info
 build
 env/
+venv/
+.vscode
+.python-version
