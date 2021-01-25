@@ -2,15 +2,16 @@ from setuptools import setup
 
 version = open('VERSION').read()
 setup(
-    name='redis_opentracing',
+    name='signalfx-instrumentation-redis',
     version=version,
-    url='https://github.com/opentracing-contrib/python-redis/',
-    download_url='https://github.com/opentracing-contrib/python-redis/tarball/'+version,
+    url='https://github.com/signalfx/python-redis/',
+    download_url='https://github.com/signalfx/python-redis/tarball/'+version,
     license='Apache License 2.0',
-    author='Carlos Alberto Cortez',
-    author_email='calberto.cortez@gmail.com',
+    author='SignalFx, Inc.',
+    author_email='signalfx-oss@splunk.com',
     description='OpenTracing support for Redis',
     long_description=open('README.rst').read(),
+    long_description_content_type="text/x-rst",
     packages=['redis_opentracing'],
     platforms='any',
     install_requires=[

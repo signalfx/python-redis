@@ -1,8 +1,3 @@
-
-.. image:: https://travis-ci.org/opentracing-contrib/python-redis.svg?branch=master
-    :target: http://travis-ci.org/opentracing-contrib/python-redis
-    :alt: Build Status
-
 #################
 Redis Opentracing
 #################
@@ -11,12 +6,16 @@ This package enables distributed tracing for the Python redis library.
 
 **Note**: If you need to use the old OpenTracing 1.0 API, use the 0.x releases.
 
+.. image:: https://travis-ci.org/opentracing-contrib/python-redis.svg?branch=master
+    :target: http://travis-ci.org/opentracing-contrib/python-redis
+    :alt: Build Status
+
 Installation
 ============
 
 Run the following command:
 
-    $ pip install redis_opentracing
+    $ pip install signalfx-instrumentation-redis
 
 Getting started
 ===============
